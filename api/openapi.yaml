@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  description: This is a sample server Movie list server.
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: OpenAPI Movielist
+  version: 1.0.0
+servers:
+- url: http://movielist.swagger.io/v1
+paths:
+  /movies:
+    get:
+      description: Lists all movies
+      operationId: listMovies
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movies'
+          description: successful operation
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: List Movies
+      tags:
+      - movie
+  /movie/{movieId}:
+    get:
+      description: Returns a single movie
+      operationId: getMovieById
+      parameters:
+      - description: The id of the movie to retrieve
+        explode: false
+        in: path
+        name: movieId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+          description: Expected response to a valid request
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Find movie by ID
+      tags:
+      - movie
+components:
+  schemas:
+    Movie:
+      description: A movie from the database
+      example:
+        overview: Overview of the movie
+        original_language: en
+        release_date: 2019-05-30
+        vote_average: 4.6
+        id: 0
+        title: matrix
+        adult: false
+        poster_path: /image.jpg
+      properties:
+        id:
+          description: unique movie id
+          format: int64
+          type: integer
+        title:
+          example: matrix
+          type: string
+        release_date:
+          example: 2019-05-30
+          type: string
+        original_language:
+          description: original release language of the movie
+          example: en
+          type: string
+        adult:
+          example: false
+          type: boolean
+        poster_path:
+          example: /image.jpg
+          type: string
+        overview:
+          example: Overview of the movie
+          type: string
+        vote_average:
+          example: 4.6
+          format: float
+          type: number
+      required:
+      - id
+      - title
+      title: a Movie
+      type: object
+    Movies:
+      items:
+        $ref: '#/components/schemas/Movie'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
