@@ -13,6 +13,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/rs/cors"
+
 	openapi "github.com/GIT_USER_ID/GIT_REPO_ID/go"
 )
 
@@ -24,5 +26,6 @@ func main() {
 
 	router := openapi.NewRouter(MovieApiController)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	handler := cors.Default().Handler(router)
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
